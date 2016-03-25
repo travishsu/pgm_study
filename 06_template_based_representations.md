@@ -31,3 +31,14 @@ $$P(X^{(t+1)}=\xi'|X^{(t)}=\xi)=P(X'=\xi'|X=\xi)$$
 我們稱$P(X'|X)$ 分佈為transition model。
 
 ## 6.2.2 Dynamic Bayesian Network
+現在我們知道temporal model可用很多個transition model構成，我們開始談論transition model的細節。
+ - 2-times-slice Bayesian network(2-TBN): $P(X'|X_I)$, that is, conditional Bayesian network over $X'$ given interface variables $X_I$, and $X', X_I \subset X$。
+
+ ![2-TBN](./img/2TBN.png)
+ - interface variable $X_I$: variables whose values at time $t$ have direct effect to time $t+1$; parents of $X'$
+
+2-TBN寫成conditional distribution，
+ $$P(X'|X_I)=\prod_{i=1}^nP(X'_i|Pa_{X'_i})$$
+舉例來說，上圖的分佈寫成，
+$$P(W',\cdots,F',O'|W,\cdots,F)$$
+$$=P(W'|W)P(V'|W,V)P(L'|V,L)P(F'|W,F)P(O'|L',F')$$
