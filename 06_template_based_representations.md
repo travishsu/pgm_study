@@ -42,3 +42,14 @@ $$P(X^{(t+1)}=\xi'|X^{(t)}=\xi)=P(X'=\xi'|X=\xi)$$
 舉例來說，上圖的分佈寫成，
 $$P(W',\cdots,F',O'|W,\cdots,F)$$
 $$=P(W'|W)P(V'|W,V)P(L'|V,L)P(F'|W,F)P(O'|L',F')$$
+對於每個node $X'_i$來說$P(X'_i|Pa_{X'_i})$ 是它的template factor。
+
+再來是討論整個network
+- inter-time-slice edge: 不同時間點的連結
+- intra-time-slice edge: 相同時間點內的連結
+
+被inter-time-slice連結的兩個node $X\rightarrow X'$，我們稱作persistence variables  
+
+> **Definition** A dynamic Bayesian network (DBN) is a pair $<B_0,B_{\rightarrow}>$, where $B_0$ is a Bayesian network over $X^{(0)}$, representing the initial distribution over states, and $B_{\rightarrow}$ is a 2-TBN for the process. For any desired time span $T \geq 0$, the distribution over $X^{(0:T)}$ is defined as a unrolled Bayesian network, where, for any $i=1,\ldots,n$:
+> - the structure and CPDs of $X_i^{(0)}$ are the same as those for $X_i$ in $B_0$
+> - the structure and CPDs of $X_i^{(t)}$ for $t>0$ are the same as those $X'_i$ in $B_{\rightarrow}$
