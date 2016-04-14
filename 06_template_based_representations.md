@@ -53,3 +53,68 @@ $$=P(W'|W)P(V'|W,V)P(L'|V,L)P(F'|W,F)P(O'|L',F')$$
 > **Definition** A dynamic Bayesian network (DBN) is a pair $<B_0,B_{\rightarrow}>$, where $B_0$ is a Bayesian network over $X^{(0)}$, representing the initial distribution over states, and $B_{\rightarrow}$ is a 2-TBN for the process. For any desired time span $T \geq 0$, the distribution over $X^{(0:T)}$ is defined as a unrolled Bayesian network, where, for any $i=1,\ldots,n$:
 > - the structure and CPDs of $X_i^{(0)}$ are the same as those for $X_i$ in $B_0$
 > - the structure and CPDs of $X_i^{(t)}$ for $t>0$ are the same as those $X'_i$ in $B_{\rightarrow}$
+
+## 6.2.3 State-Observation Models
+> In a state-observation model, we view the system as evolving naturally on its own, with our observations of it occurring in a separate process.
+
+#### Two Assumptions:
+ - Markovian
+ $$(X^{(t+1)}\perp X^{(0:(t-1))}|X^{(t)})$$
+ - observation at time $t$ and other states are conditionally  independent
+ $$(O^{(t)}\perp X^{(0:(t-1))}, X^{(t+1:\infty)}|X^{(t)})$$
+
+ 要描述每個State-Observation Model之時，都要設定
+ - transition model - $P(X'|X)$
+ - observaton model - $P(O|X)$
+
+#### Temporal System to State-Observation Models
+ 任何temporal system都可被看成一個state-observation model，只要我們把所有的變數分成state variable和observation variable。
+
+ 若observation variable $Y$在原始model中的parents包含上個時間點的state variable，我們可以假裝有一個新的observaton variable $\tilde{Y}$，完全等同於$Y$的值，然後再把原來的$Y$看成state variable。。
+
+ #### Applications
+ - Hidden Markov Models
+ - Linear Dynamic Systems
+
+#### Hidden Markov Models
+![4-State HMM](./img/stateobservationmodel.png)
+
+ - Special case of DBN
+ - **transition model** is often assumed to be **sparse**
+
+上圖可以代表一個transition model，這些node用來表示state是有限多個的，而edge代表nonzero可能的transition。這個圖可被看成一個probabilistic finite-state automaton (#機率#有限狀態#自動機)。
+
+再來討論的是observaton model，每個state都只有一個observaton，所以會把每個$P(o|s)$ 都設為1
+
+#### Linear Dynamic Systems
+
+>  A system of one or more real-valued variables that evolve linearly over time, with some Gaussian noise. Such systems are also often called **Kalman filters**, after the algorithm used to perform tracking. **A linear dynamical system can be viewed as a dynamic Bayesian network where the variables are all continuous and all of the dependencies are linear Gaussian.**
+
+舉例，車子的位子和速度各用隨機變數$X$ 和$V$表示，可用下面的model去approximate，
+$$ P(X'|X,V) = X + V\bigtriangleup + \mathcal{N}(0;\sigma_X^2) $$
+$$ P(V'|V) = V + \mathcal{N}(0;\sigma_V^2)$$
+
+一般化來說，
+$$P(X^{(t)}|X^{(t-1)}) = AX^{(t-1)} + \mathcal{N}(0;Q)$$
+$$=\mathcal{N}(AX^{(t-1)};Q) $$
+而對observaton，
+$$P(O^{(t)}|X^{(t)}) = HX^{(t)} + \mathcal{N}(0;R)$$
+$$=\mathcal{N}(HX^{(t)};R)$$
+
+where,
+- $X$: $n$-vector of state variables
+- $O$: $m$-vector of observaton variables
+- $A$: $n\times n$ matrix
+- $Q$: $n\times n$ covariance matrix of Gaussian noise on state
+- $H$: $m\times n$ matrix
+- $R$: $m\times m$ covariance matrix of Gaussian noise on observaton
+
+To have good understanding, we recall multivariate Normal:
+$$P(X) = \frac{1}{ (2\pi)^{\frac{k}{2}}|\sigma|^{\frac{1}{2}} }\exp[-\frac{1}{2}(X-\bar{X})^T\sigma^{-1}(X-\bar{X})]$$
+
+**Alternative model**
+
+- Nonlinear variant, also called an *extended Kalman filter*
+- Discrete variable, called *switching linear dynamical system (SLDS)*
+
+# 6.3 Template Variables and Template Factors
